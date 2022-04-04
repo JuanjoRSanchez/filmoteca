@@ -14,8 +14,4 @@ public interface PeliculasRepositories extends JpaRepository<Pelicula, Long> {
     @Query
     Optional<Pelicula> findPeliculaByTitle(String title);
 
-    static void delete(Optional<Pelicula> pelicula) {
-
-    };
-
 }

@@ -26,12 +26,20 @@ public class UsuarioService {
         this.usuarioRepositories = usuarioRepositories;
     }
 
-    @Bean
+   
     public List<Usuario> getUsuario() {
         return usuarioRepositories.findAll();
     }
 
     public Optional<Usuario> getUsuarioById(Long usuarioId) {
+
+        Optional<Usuario> usuario = usuarioRepositories.findById(usuarioId);
+
+        return usuario;
+
+    }
+    
+    public Optional<Usuario> getUsuarioByIdSeguro(Long usuarioId) {
 
         Optional<Usuario> usuario = usuarioRepositories.findById(usuarioId);
 
@@ -57,19 +65,21 @@ public class UsuarioService {
         usuarioRepositories.deleteById(usuarioId);
     }
 
-    @Transactional
-    public void updateUsuario(Long usuarioId, String name, String password, String email) {
+    public Usuario updateUsuario(Usuario usuario) {
 
-        Usuario usuario = usuarioRepositories.findById(usuarioId).orElseThrow(() -> new IllegalStateException(
-                "Usuario con id " + usuarioId + " no existe en la base de datos"));
-        if (name != null && name.length() > 0 && !Objects.equals(usuario.getName(), name)) {
-            usuario.setName(name);
+        Usuario usuarioBd = usuarioRepositories.findById(usuario.getId_usuario()).orElseThrow(() -> new IllegalStateException(
+                "Usuario con id " + usuario.getId_usuario() + " no existe en la base de datos"));
+        if (usuario.getName() != null && usuario.getName().length() > 0 && !usuarioBd.getName().equals(usuario.getName())) {
+        	usuarioBd.setName(usuario.getName());
         }
-        if (password != null && password.length() > 0 && !Objects.equals(usuario.getPassword(), password)) {
-            usuario.setPassword(password);
+        if (usuario.getPassword() != null && usuario.getPassword().length() > 0 && !usuarioBd.getPassword().equals(usuario.getPassword())) {
+        	usuarioBd.setPassword(usuario.getPassword());
         }
-        if (email != null && email.length() > 0 && !Objects.equals(usuario.getEmail(), email)) {
-            usuario.setEmail(email);
+        if (usuario.getEmail() != null && usuario.getEmail().length() > 0 && !usuarioBd.getEmail().equals(usuario.getEmail())) {
+        	usuarioBd.setEmail(usuario.getEmail());
         }
+
+        return usuarioRepositories.save(usuarioBd);
+        
     }
 }

@@ -1,112 +1,106 @@
 package ccom.filmoteca.hibernate.spring.model;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class Pelicula {
-
-    @Id
+@Table(name = "pelicula")
+public class Pelicula implements Serializable{
+	
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id_pelicula;
 
     private String title;
 
-    private String nameDirector;
-
+    @Column(name = "anio")
     private String anio;
+    
+    //@JsonManagedReference
+    @ManyToMany
+    //@ManyToMany(mappedBy = "peliculas", fetch = FetchType.LAZY)  
+    private Set<Usuario> usuarios = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "id_director")
+    private Director director;
+    
     public Pelicula() {
     }
 
-    public Pelicula(String title, String nameDirector, String anio) {
-        this.title = title;
-        this.nameDirector = nameDirector;
-        this.anio = anio;
+	public Pelicula(Long id_pelicula, String title, String anio, Set<Usuario> usuarios, Director director) {
+		super();
+		this.id_pelicula = id_pelicula;
+		this.title = title;
+		this.anio = anio;
+		this.usuarios = usuarios;
+		this.director = director;
+	}
 
-    }
+	public Long getId_pelicula() {
+		return id_pelicula;
+	}
 
-    public Long getId() {
-        return Id;
-    }
+	public void setId_pelicula(Long id_pelicula) {
+		this.id_pelicula = id_pelicula;
+	}
 
-    public void setId(Long id) {
-        Id = id;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public String getAnio() {
+		return anio;
+	}
 
-    public String getNameDirector() {
-        return nameDirector;
-    }
+	public void setAnio(String anio) {
+		this.anio = anio;
+	}
 
-    public void setNameDirector(String nameDirector) {
-        this.nameDirector = nameDirector;
-    }
+	public Set<Usuario> getUsuarios() {
+		return usuarios;
+	}
 
-    public String getAnio() {
-        return anio;
-    }
+	public void setUsuarios(Set<Usuario> usuarios) {
+		this.usuarios = usuarios;
+	}
 
-    public void setAnio(String anio) {
-        this.anio = anio;
-    }
+	public Director getDirector() {
+		return director;
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((Id == null) ? 0 : Id.hashCode());
-        result = prime * result + ((anio == null) ? 0 : anio.hashCode());
-        result = prime * result + ((nameDirector == null) ? 0 : nameDirector.hashCode());
-        result = prime * result + ((title == null) ? 0 : title.hashCode());
-        return result;
-    }
+	public void setDirector(Director director) {
+		this.director = director;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Pelicula other = (Pelicula) obj;
-        if (Id == null) {
-            if (other.Id != null)
-                return false;
-        } else if (!Id.equals(other.Id))
-            return false;
-        if (anio == null) {
-            if (other.anio != null)
-                return false;
-        } else if (!anio.equals(other.anio))
-            return false;
-        if (nameDirector == null) {
-            if (other.nameDirector != null)
-                return false;
-        } else if (!nameDirector.equals(other.nameDirector))
-            return false;
-        if (title == null) {
-            if (other.title != null)
-                return false;
-        } else if (!title.equals(other.title))
-            return false;
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Pelicula [Id=" + Id + ", anio=" + anio + ", nameDirector=" + nameDirector
-                + ", title=" + title + "]";
-    }
-
+	
+	
+   
 }

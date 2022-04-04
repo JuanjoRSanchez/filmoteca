@@ -1,105 +1,123 @@
 package ccom.filmoteca.hibernate.spring.model;
 
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import org.springframework.lang.NonNull;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+
 
 @Entity
-@Table
-public class Usuario {
+@Table(name = "usuario")
+public class Usuario implements Serializable{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id_usuario;
 
-    private String name;
+	@Column(name = "name")
+	private String name;
 
-    private String password;
+	@Column(name = "password")
+	private String password;
 
-    private String email;
+	@Column(name = "email")
+	private String email;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date fechaAlta = new Date();
+	
+	
+	//@JsonBackReference
+	@ManyToMany
+	//@ManyToMany(cascade = { CascadeType.ALL}, fetch = FetchType.LAZY )
+	@JoinTable(name = "peliculas_usuario", joinColumns =  @JoinColumn(name = "id_usuario"),
+	inverseJoinColumns =  @JoinColumn(name = "id_pelicula"))
+	private Set<Pelicula> peliculas = new HashSet<>();
+	
+	public Usuario(Long id_usuario, String name, String password, String email, Date fechaAlta,
+			Set<Pelicula> peliculas) {
+		this.id_usuario = id_usuario;
+		this.name = name;
+		this.password = password;
+		this.email = email;
+		this.fechaAlta = fechaAlta;
+		this.peliculas = peliculas;
+	}
+	
+	public Usuario() {
+		
+	}
 
-    public Usuario() {
-    }
+	public Long getId_usuario() {
+		return id_usuario;
+	}
 
-    public Usuario(String name, String password, String email) {
-        this.name = name;
-        this.password = password;
-        this.email = email;
+	public void setId_usuario(Long id_usuario) {
+		this.id_usuario = id_usuario;
+	}
 
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public Date getFechaAlta() {
+		return fechaAlta;
+	}
 
-    @Override
-    public String toString() {
-        return "Usuario [Id=" + Id + ", email=" + email + ", name=" + name + ", password=" + password + "]";
-    }
+	public void setFechaAlta(Date fechaAlta) {
+		this.fechaAlta = fechaAlta;
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((Id == null) ? 0 : Id.hashCode());
-        result = prime * result + ((email == null) ? 0 : email.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((password == null) ? 0 : password.hashCode());
-        return result;
-    }
+	public Set<Pelicula> getPeliculas() {
+		return peliculas;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Usuario other = (Usuario) obj;
-        if (Id == null) {
-            if (other.Id != null)
-                return false;
-        } else if (!Id.equals(other.Id))
-            return false;
-        if (email == null) {
-            if (other.email != null)
-                return false;
-        } else if (!email.equals(other.email))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (password == null) {
-            if (other.password != null)
-                return false;
-        } else if (!password.equals(other.password))
-            return false;
-        return true;
-    }
+	public void setPeliculas(Set<Pelicula> peliculas) {
+		this.peliculas = peliculas;
+	}
 
+	
 }

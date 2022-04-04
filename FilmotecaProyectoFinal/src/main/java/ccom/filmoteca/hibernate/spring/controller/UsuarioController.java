@@ -31,14 +31,12 @@ public class UsuarioController {
 
     @GetMapping(value = "/")
     public List<Usuario> getListUsuario() {
-
         return usuarioService.getUsuario();
     }
 
     @RequestMapping(value = "{usuarioId}")
     public Optional<Usuario> getUsusarioById(@PathVariable("usuarioId") Long usuarioId) {
         return usuarioService.getUsuarioById(usuarioId);
-
     }
 
     @PostMapping
@@ -51,14 +49,8 @@ public class UsuarioController {
         usuarioService.deleteUsuario(usuarioId);
     }
 
-    @PutMapping(path = "{usuarioId}")
-    public void updateUsuario(
-            @PathVariable("usuarioId") Long usuarioId,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String password,
-            @RequestParam(required = false) String email) {
-
-        usuarioService.updateUsuario(usuarioId, name, password, email);
-
+    @PutMapping()
+    public Usuario updateUsuario(@RequestBody Usuario usuario) {
+        return usuarioService.updateUsuario(usuario);
     }
 }

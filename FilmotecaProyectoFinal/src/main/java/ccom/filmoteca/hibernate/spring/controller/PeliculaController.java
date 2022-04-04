@@ -14,48 +14,71 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ccom.filmoteca.hibernate.spring.dto.AddPeliculaUsuarioDirector;
+import ccom.filmoteca.hibernate.spring.model.Director;
 import ccom.filmoteca.hibernate.spring.model.Pelicula;
+import ccom.filmoteca.hibernate.spring.model.Usuario;
 import ccom.filmoteca.hibernate.spring.service.PeliculaService;
+import ccom.filmoteca.hibernate.spring.service.UsuarioService;
 
 @RestController
 @RequestMapping(path = "filmania/v1/pelicula")
 public class PeliculaController {
 
-    private final PeliculaService peliculaService;
 
-    @Autowired
-    public PeliculaController(PeliculaService peliculaService) {
-        this.peliculaService = peliculaService;
-    }
+	@Autowired
+	private final PeliculaService peliculaService;
 
-    @GetMapping(value = "/")
-    public List<Pelicula> getListPeliculas() {
-        return peliculaService.getPelicula();
-    }
+	@Autowired
+	public PeliculaController(PeliculaService peliculaService) {
+		this.peliculaService = peliculaService;
+	}
 
-    @RequestMapping(value = "{peliculaTitle}")
-    public Optional<Pelicula> getPeliculaByTitle(@PathVariable("peliculaTitle") String peliculaTitle) {
-        return peliculaService.getPeliculaByTitle(peliculaTitle);
+	@GetMapping(value = "/")
+	public List<Pelicula> getListPeliculas() {
+		return peliculaService.getPelicula();
+	}
 
-    }
+	@RequestMapping(value = "{peliculaId}")
+	public Pelicula getPeliculaById(@PathVariable("peliculaId") Long peliculaId) {
+		return peliculaService.getPeliculaById(peliculaId);
+		
+	}
+	
+	@RequestMapping(value = "title/{peliculaTitle}")
+	public Optional<Pelicula> getPeliculaByTitle(@PathVariable("peliculaTitle") String peliculaTitle) {
+		return peliculaService.getPeliculaByTitle(peliculaTitle);
+	}
 
-    @PostMapping
-    public void registerNewUsuario(@RequestBody Pelicula pelicula) {
-        peliculaService.addNewPelicula(pelicula);
-    }
+	//Añadir película
+	/*
+	@PostMapping(consumes = {"application/json"})
+	public Pelicula registerNewPelicula(@RequestBody Pelicula pelicula) {
+		return peliculaService.addNewPelicula(pelicula);
+		
+	}
+	*/
+	
+	//Añadir película
+	@PostMapping
+	public void registerNewPelicula(@RequestBody AddPeliculaUsuarioDirector addPeliculaUsuarioDirector) {
+			peliculaService.addNewPeliculaUsuarioDirector(addPeliculaUsuarioDirector);
+			
+	}
+	
+	@DeleteMapping(value = "{idPelicula}")
+	public void deletePelicula(@PathVariable("idPelicula") Long idPelicula) {
+		peliculaService.deletePelicula(idPelicula);
+	}
 
-    @DeleteMapping(path = "{peliculaTitle}")
-    public void deletePelicula(@PathVariable("peliculaTitle") String peliculaTitle) {
-        peliculaService.deletePelicula(peliculaTitle);
-    }
+	@PutMapping
+	public void updatePelicula(@RequestBody Pelicula pelicula ) {
 
-    @PutMapping(path = "{peliculaTitle}")
-    public void updatePelicula(
-            @PathVariable("peliculaTitle") String title,
-            @RequestParam(required = false) String nameDirector,
-            @RequestParam(required = false) String anio) {
+		peliculaService.updatePelicula(pelicula);
 
-        peliculaService.updatePelicula(title, nameDirector, anio);
-
-    }
+	}
+	
+	
+	
+	
 }
