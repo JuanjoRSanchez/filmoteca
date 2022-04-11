@@ -19,7 +19,7 @@ import ccom.filmoteca.hibernate.spring.model.Usuario;
 import ccom.filmoteca.hibernate.spring.service.UsuarioService;
 
 @RestController
-@RequestMapping(path = "filmania/v1/")
+@RequestMapping(path = "filmania/v1/usuario")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -39,6 +39,10 @@ public class UsuarioController {
         return usuarioService.getUsuarioById(usuarioId);
     }
 
+    @RequestMapping(value ="/log" , params={"email","password"} )
+    public Boolean getUsusarioLog(@RequestParam String email, String password) {
+        return usuarioService.getUsuarioLog(email, password);
+    }
     @PostMapping
     public void registerNewUsuario(@RequestBody Usuario usuario) {
         usuarioService.addNewUsuario(usuario);

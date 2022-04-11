@@ -1,15 +1,13 @@
 package ccom.filmoteca.hibernate.spring.service;
 
-import java.util.HashSet;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import ccom.filmoteca.hibernate.spring.dto.AddPeliculaUsuarioDirector;

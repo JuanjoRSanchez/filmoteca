@@ -37,6 +37,8 @@ public class DirectorController {
     public Optional<Director> getDirectorById(@PathVariable("directorID") Long directorID) {
         return directorService.getDirectorById(directorID);
     }
+    
+   
 
     @PostMapping
     public void registerNewDirector(@RequestBody Director director) {

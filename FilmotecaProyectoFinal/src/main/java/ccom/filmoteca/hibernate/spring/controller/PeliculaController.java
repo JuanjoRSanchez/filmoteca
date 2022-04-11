@@ -11,15 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ccom.filmoteca.hibernate.spring.dto.AddPeliculaUsuarioDirector;
-import ccom.filmoteca.hibernate.spring.model.Director;
 import ccom.filmoteca.hibernate.spring.model.Pelicula;
-import ccom.filmoteca.hibernate.spring.model.Usuario;
 import ccom.filmoteca.hibernate.spring.service.PeliculaService;
-import ccom.filmoteca.hibernate.spring.service.UsuarioService;
 
 @RestController
 @RequestMapping(path = "filmania/v1/pelicula")
