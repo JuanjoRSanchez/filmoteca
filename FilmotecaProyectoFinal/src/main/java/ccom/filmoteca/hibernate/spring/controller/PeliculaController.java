@@ -35,6 +35,13 @@ public class PeliculaController {
 		return peliculaService.getPelicula();
 	}
 
+	@RequestMapping(value =  "/usuarioMail/{usuarioMail}")
+	public List<Pelicula> getPeliculaByUsuarioMail(@PathVariable("usuarioMail") String  usuarioMail) {
+		return peliculaService.getPeliculasByUsuarioMail(usuarioMail);
+		
+	}
+	
+	
 	@RequestMapping(value = "{peliculaId}")
 	public Pelicula getPeliculaById(@PathVariable("peliculaId") Long peliculaId) {
 		return peliculaService.getPeliculaById(peliculaId);

@@ -1,6 +1,7 @@
 package ccom.filmoteca.hibernate.spring.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,11 +33,17 @@ public class PeliculaService {
 	private PeliculasRepositories peliculasRepositories;
 
 	@Autowired
-	public void PeluculaServide(PeliculasRepositories peliculasRepositories) {
+	private UsuarioService usuarioService;
+
+	@Autowired
+	public PeliculaService(UsuarioRepositories usuarioRepositories, DirectorRepository directorRepository,
+			PeliculasRepositories peliculasRepositories) {
+		this.usuarioRepositories = usuarioRepositories;
+		this.directorRepository = directorRepository;
 		this.peliculasRepositories = peliculasRepositories;
 	}
 
-	
+
 	public List<Pelicula> getPelicula() {
 		return peliculasRepositories.findAll();
 	}
@@ -115,6 +122,17 @@ public class PeliculaService {
 		if (peliculaInput.getAnio() != null && peliculaInput.getAnio().length() > 0 && !Objects.equals(pelicula.getAnio(), peliculaInput.getAnio())) {
 			pelicula.setAnio(peliculaInput.getAnio());
 		}
+	}
+
+
+	public List<Pelicula> getPeliculasByUsuarioMail(String usuarioMail) {
+		List<Pelicula> peliculas = new ArrayList<Pelicula>();
+		Usuario usuario = new Usuario();
+		
+	    usuario = usuarioService.getUsuarioByMail(usuarioMail);
+		peliculas = peliculasRepositories.findByUsuarios(usuario);
+		
+		return peliculas;
 	}
 	
 	

@@ -2,12 +2,12 @@ package ccom.filmoteca.hibernate.spring.model;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,21 +16,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.springframework.lang.NonNull;
+
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 
 
 @Entity
 @Table(name = "usuario")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario implements Serializable{
 
 	@Id
@@ -57,19 +59,8 @@ public class Usuario implements Serializable{
 	inverseJoinColumns =  @JoinColumn(name = "id_pelicula"))
 	private Set<Pelicula> peliculas = new HashSet<>();
 	
-	public Usuario(Long id_usuario, String name, String password, String email, Date fechaAlta,
-			Set<Pelicula> peliculas) {
-		this.id_usuario = id_usuario;
-		this.name = name;
-		this.password = password;
-		this.email = email;
-		this.fechaAlta = fechaAlta;
-		this.peliculas = peliculas;
-	}
-	
-	public Usuario() {
-		
-	}
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Collection<Rol> roles = new ArrayList<>();
 
 	public Long getId_usuario() {
 		return id_usuario;
@@ -118,6 +109,16 @@ public class Usuario implements Serializable{
 	public void setPeliculas(Set<Pelicula> peliculas) {
 		this.peliculas = peliculas;
 	}
+
+	public Collection<Rol> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Collection<Rol> roles) {
+		this.roles = roles;
+	}
+	
+	
 
 	
 }

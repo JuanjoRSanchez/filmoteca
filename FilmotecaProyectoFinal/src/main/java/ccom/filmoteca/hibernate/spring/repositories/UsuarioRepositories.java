@@ -16,6 +16,7 @@ public interface UsuarioRepositories extends JpaRepository<Usuario, Long> {
     
     @Query
     Optional<Usuario>  findByPassword(String password);
-    
+ 
+  
     
 }

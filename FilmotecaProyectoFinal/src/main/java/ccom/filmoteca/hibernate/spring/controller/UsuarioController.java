@@ -29,6 +29,7 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    
     @GetMapping(value = "/")
     public List<Usuario> getListUsuario() {
         return usuarioService.getUsuario();
@@ -39,12 +40,19 @@ public class UsuarioController {
         return usuarioService.getUsuarioById(usuarioId);
     }
 
-    @RequestMapping(value ="/log" , params={"email","password"} )
-    public Boolean getUsusarioLog(@RequestParam String email, String password) {
-        return usuarioService.getUsuarioLog(email, password);
+//    @RequestMapping(value ="/log" , params={"email","password"} )
+//    public Boolean getUsusarioLog(@RequestParam String email, String password) {
+//        return usuarioService.getUsuarioLog(email, password);
+//    }
+    
+    @RequestMapping(value ="/login" , params={"email","password"} )
+    public Usuario getUsusarioLogin(@RequestParam String email, String password) {
+        return usuarioService.getUsuarioLogin(email, password).orElseThrow();
     }
+    
     @PostMapping
     public void registerNewUsuario(@RequestBody Usuario usuario) {
+    	
         usuarioService.addNewUsuario(usuario);
     }
 
