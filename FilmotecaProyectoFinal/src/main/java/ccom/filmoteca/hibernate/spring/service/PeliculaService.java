@@ -134,6 +134,19 @@ public class PeliculaService {
 		
 		return peliculas;
 	}
+
+
+	public void deletePeliculaByTitle(String titltePelicula) {
+		Optional<Pelicula> peliculaBd = peliculasRepositories.findPeliculaByTitle(titltePelicula);
+		if (peliculaBd.isEmpty()) {
+			throw new IllegalStateException("La película con título " + titltePelicula + " no está en la base de datos");
+		}			
+		
+		
+		peliculasRepositories.delete(peliculaBd.get());
+		
+		
+	}
 	
 	
 

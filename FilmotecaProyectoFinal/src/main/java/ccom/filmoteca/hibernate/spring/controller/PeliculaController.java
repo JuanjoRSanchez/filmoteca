@@ -74,6 +74,12 @@ public class PeliculaController {
 		peliculaService.deletePelicula(idPelicula);
 	}
 
+	@DeleteMapping(value = "title/{titltePelicula}")
+	public void deletePeliculaByTitle(@PathVariable("titltePelicula") String titltePelicula) {
+		peliculaService.deletePeliculaByTitle(titltePelicula);
+	}
+
+	
 	@PutMapping
 	public void updatePelicula(@RequestBody Pelicula pelicula ) {
 

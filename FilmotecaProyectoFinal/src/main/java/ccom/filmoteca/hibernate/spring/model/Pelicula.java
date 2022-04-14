@@ -23,8 +23,11 @@ public class Pelicula implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_pelicula;
 
+	@Column(unique = true)
     private String title;
 
+
+	
     @Column(name = "anio")
     private String anio;
     

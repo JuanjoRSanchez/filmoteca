@@ -15,11 +15,11 @@ public class MiConfiguracion {
 
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**");
-	//			registry.addMapping("filmania/v1/**")
-	//				.allowedOrigins("http://localhost:9013")
-	//				.allowedMethods("GET", "POST","PUT", "DELETE")
-	//				.maxAge(3600);
+		//		registry.addMapping("/**");
+				registry.addMapping("/**")
+					.allowedOrigins("http://localhost:9013")
+					.allowedMethods("GET", "POST","PUT", "DELETE")
+					.maxAge(3600);
 			}
 			
 			
