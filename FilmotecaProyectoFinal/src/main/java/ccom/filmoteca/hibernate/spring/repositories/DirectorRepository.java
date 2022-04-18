@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import ccom.filmoteca.hibernate.spring.model.Director;
 
@@ -16,5 +17,11 @@ public interface DirectorRepository extends JpaRepository<Director, Long> {
 		
 		
 	}
+	
+//	@Query("SELECT * FROM director  where name LIKE ?0", nativeQuery=true)
+//	Director findDirectorByLetter(@Param("director") String director);
+	
+	
+	Director  findByNameStartingWith(String name);
 	
 }

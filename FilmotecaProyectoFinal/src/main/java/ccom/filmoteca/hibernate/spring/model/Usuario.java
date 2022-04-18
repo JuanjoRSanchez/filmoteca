@@ -51,10 +51,8 @@ public class Usuario implements Serializable{
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaAlta = new Date();
 	
-	
 	@JsonBackReference
 	@ManyToMany
-	//@ManyToMany(cascade = { CascadeType.ALL}, fetch = FetchType.LAZY )
 	@JoinTable(name = "peliculas_usuario", joinColumns =  @JoinColumn(name = "id_usuario"),
 	inverseJoinColumns =  @JoinColumn(name = "id_pelicula"))
 	private Set<Pelicula> peliculas = new HashSet<>();

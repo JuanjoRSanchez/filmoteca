@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ccom.filmoteca.hibernate.spring.dto.AddPeliculaDTO;
 import ccom.filmoteca.hibernate.spring.dto.AddPeliculaUsuarioDirector;
 import ccom.filmoteca.hibernate.spring.model.Pelicula;
 import ccom.filmoteca.hibernate.spring.service.PeliculaService;
@@ -68,6 +69,14 @@ public class PeliculaController {
 			peliculaService.addNewPeliculaUsuarioDirector(addPeliculaUsuarioDirector);
 			
 	}
+	
+	//Añadir película
+	@PostMapping(value = "/addPelicula")
+	public Boolean registerNewPeliculaD(@RequestBody AddPeliculaDTO addPeliculaDTO) {
+			peliculaService.addNewPeliculaUsuarioDirectorD(addPeliculaDTO);
+			return false;
+	}
+	
 	
 	@DeleteMapping(value = "{idPelicula}")
 	public void deletePelicula(@PathVariable("idPelicula") Long idPelicula) {

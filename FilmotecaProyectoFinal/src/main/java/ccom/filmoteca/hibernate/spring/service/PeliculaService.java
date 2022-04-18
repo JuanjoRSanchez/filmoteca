@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ccom.filmoteca.hibernate.spring.dto.AddPeliculaDTO;
 import ccom.filmoteca.hibernate.spring.dto.AddPeliculaUsuarioDirector;
 import ccom.filmoteca.hibernate.spring.model.Director;
 import ccom.filmoteca.hibernate.spring.model.Pelicula;
@@ -95,6 +96,38 @@ public class PeliculaService {
 			
 			peliculasRepositories.save(pelicula);
 		}
+		
+	}
+	
+	public void addNewPeliculaUsuarioDirectorD(AddPeliculaDTO addPeliculaDTO) {	
+		Optional<Pelicula> peliculaOptional = peliculasRepositories.findPeliculaByTitle(addPeliculaDTO.getTitle());
+		Pelicula peliculaOp = new Pelicula();
+		Usuario usuario = new Usuario();
+		usuario = usuarioRepositories.findUsuarioByEmail(addPeliculaDTO.getEmailusuario()).orElseThrow();
+		Director director = new Director(); 
+		director = directorRepository.findDirectorByName(addPeliculaDTO.getNombreDirector()).orElseThrow();
+		if(peliculaOptional.isEmpty()) {
+	
+			if(director == null) {
+				director.setName(addPeliculaDTO.getNombreDirector());
+				directorRepository.save(director);
+			}
+			
+			Pelicula pelicula = new Pelicula();			
+			pelicula.getUsuarios().add(usuario);
+			pelicula.setAnio(addPeliculaDTO.getAnio());
+			pelicula.setDirector(director);
+			pelicula.setTitle(addPeliculaDTO.getTitle());
+			pelicula.setNota(addPeliculaDTO.getNota());
+			
+			peliculasRepositories.save(pelicula);
+		}else {
+			peliculaOp = peliculaOptional.get();
+			peliculaOp.getUsuarios().add(usuario);
+			peliculaOp.setDirector(director);
+	        peliculasRepositories.save(peliculaOp); 
+			
+		}	
 		
 	}
 	

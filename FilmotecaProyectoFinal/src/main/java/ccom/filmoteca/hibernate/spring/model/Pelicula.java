@@ -25,11 +25,12 @@ public class Pelicula implements Serializable{
 
 	@Column(unique = true)
     private String title;
-
-
 	
     @Column(name = "anio")
     private String anio;
+    
+    @Column(name = "nota")
+    private String nota;
     
     //@JsonManagedReference
     @ManyToMany
@@ -42,14 +43,25 @@ public class Pelicula implements Serializable{
     
     public Pelicula() {
     }
-
-	public Pelicula(Long id_pelicula, String title, String anio, Set<Usuario> usuarios, Director director) {
+	
+	public Pelicula(Long id_pelicula, String title, String anio, String nota, Set<Usuario> usuarios,
+			Director director) {
 		super();
 		this.id_pelicula = id_pelicula;
 		this.title = title;
 		this.anio = anio;
+		this.nota = nota;
 		this.usuarios = usuarios;
 		this.director = director;
+	}
+
+
+	public String getNota() {
+		return nota;
+	}
+
+	public void setNota(String nota) {
+		this.nota = nota;
 	}
 
 	public Long getId_pelicula() {
