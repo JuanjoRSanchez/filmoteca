@@ -1,18 +1,23 @@
 package ccom.filmoteca.hibernate.spring.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -29,39 +34,26 @@ public class Pelicula implements Serializable{
     @Column(name = "anio")
     private String anio;
     
-    @Column(name = "nota")
-    private String nota;
+    @JsonIgnore
+    @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pelis_usus> pelis_usus = new ArrayList<Pelis_usus>();
     
-    //@JsonManagedReference
-    @ManyToMany
-    //@ManyToMany(mappedBy = "peliculas", fetch = FetchType.LAZY)  
-    private Set<Usuario> usuarios = new HashSet<>();
-
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_director")
     private Director director;
     
     public Pelicula() {
     }
 	
-	public Pelicula(Long id_pelicula, String title, String anio, String nota, Set<Usuario> usuarios,
-			Director director) {
+	public Pelicula(Long id_pelicula, String title, String anio,
+			List<Pelis_usus> pelis_usus, Director director) {
 		super();
 		this.id_pelicula = id_pelicula;
 		this.title = title;
 		this.anio = anio;
-		this.nota = nota;
-		this.usuarios = usuarios;
+		this.pelis_usus = pelis_usus;
 		this.director = director;
-	}
-
-
-	public String getNota() {
-		return nota;
-	}
-
-	public void setNota(String nota) {
-		this.nota = nota;
 	}
 
 	public Long getId_pelicula() {
@@ -88,13 +80,6 @@ public class Pelicula implements Serializable{
 		this.anio = anio;
 	}
 
-	public Set<Usuario> getUsuarios() {
-		return usuarios;
-	}
-
-	public void setUsuarios(Set<Usuario> usuarios) {
-		this.usuarios = usuarios;
-	}
 
 	public Director getDirector() {
 		return director;
@@ -103,6 +88,34 @@ public class Pelicula implements Serializable{
 	public void setDirector(Director director) {
 		this.director = director;
 	}
+
+	public List<Pelis_usus> getPelis_usus() {
+		return pelis_usus;
+	}
+
+	public void setPelis_usus(List<Pelis_usus> pelis_usus) {
+		this.pelis_usus = pelis_usus;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(anio, director, id_pelicula, pelis_usus, title);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Pelicula other = (Pelicula) obj;
+		return Objects.equals(anio, other.anio) && Objects.equals(director, other.director)
+				&& Objects.equals(id_pelicula, other.id_pelicula) && Objects.equals(pelis_usus, other.pelis_usus)
+				&& Objects.equals(title, other.title);
+	}
+
 
 	
 	

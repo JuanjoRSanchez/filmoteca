@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ccom.filmoteca.hibernate.spring.dto.AddPeliculaDTO;
 import ccom.filmoteca.hibernate.spring.dto.AddPeliculaUsuarioDirector;
+import ccom.filmoteca.hibernate.spring.dto.PeliculaDTO;
 import ccom.filmoteca.hibernate.spring.model.Pelicula;
+import ccom.filmoteca.hibernate.spring.model.Pelis_usus;
+import ccom.filmoteca.hibernate.spring.model.Usuario;
 import ccom.filmoteca.hibernate.spring.service.PeliculaService;
 
 @RestController
@@ -30,71 +34,46 @@ public class PeliculaController {
 	public PeliculaController(PeliculaService peliculaService) {
 		this.peliculaService = peliculaService;
 	}
+	
+	@GetMapping(value = "/lista/{emailUsuario}")
+	public List<Pelis_usus> getListPeliculasUsuario(@PathVariable("emailUsuario") String emailUsuario) {
+		return peliculaService.getPeliculas(emailUsuario);
+	}
+	// Devuelve una pelicula de un usuario 
+	@GetMapping(value = "/pelicula")
+	public Pelis_usus getListPeliculaUsuario(@RequestParam(name= "email") String email, @RequestParam(name="titulo") String titulo) {
+		return peliculaService.getPelicula_Usu(email, titulo);
+	}
+	
+	// Modificar una pelicula_usu
+//	@PostMapping(value = "/mod")
+//	public String updatePeliculaUsu(@RequestBody String id) {
+//		
+//	}
+	
+	
+	@PostMapping(value = "/add")
+	public String setPelicula(@RequestBody AddPeliculaDTO addpeliculadto) {
+		return peliculaService.setPelicula(addpeliculadto);
+	}
+	
+//	@RequestMapping(value = "/titulo/{titulo}")
+//	public Pelicula getPeliculaByTitulooo(@PathVariable("titulo") String titulo) {
+//		return peliculaService.getPeliculaTitulo(titulo);
+//	}
 
-	@GetMapping(value = "/")
-	public List<Pelicula> getListPeliculas() {
-		return peliculaService.getPelicula();
-	}
-
-	@RequestMapping(value =  "/usuarioMail/{usuarioMail}")
-	public List<Pelicula> getPeliculaByUsuarioMail(@PathVariable("usuarioMail") String  usuarioMail) {
-		return peliculaService.getPeliculasByUsuarioMail(usuarioMail);
-		
-	}
-	
-	
-	@RequestMapping(value = "{peliculaId}")
-	public Pelicula getPeliculaById(@PathVariable("peliculaId") Long peliculaId) {
-		return peliculaService.getPeliculaById(peliculaId);
-		
-	}
-	
-	@RequestMapping(value = "title/{peliculaTitle}")
-	public Optional<Pelicula> getPeliculaByTitle(@PathVariable("peliculaTitle") String peliculaTitle) {
-		return peliculaService.getPeliculaByTitle(peliculaTitle);
-	}
-
-	//Añadir película
-	/*
-	@PostMapping(consumes = {"application/json"})
-	public Pelicula registerNewPelicula(@RequestBody Pelicula pelicula) {
-		return peliculaService.addNewPelicula(pelicula);
-		
-	}
-	*/
-	
-	//Añadir película
-	@PostMapping
-	public void registerNewPelicula(@RequestBody AddPeliculaUsuarioDirector addPeliculaUsuarioDirector) {
-			peliculaService.addNewPeliculaUsuarioDirector(addPeliculaUsuarioDirector);
-			
-	}
-	
-	//Añadir película
-	@PostMapping(value = "/addPelicula")
-	public Boolean registerNewPeliculaD(@RequestBody AddPeliculaDTO addPeliculaDTO) {
-			peliculaService.addNewPeliculaUsuarioDirectorD(addPeliculaDTO);
-			return false;
-	}
-	
-	
-	@DeleteMapping(value = "{idPelicula}")
-	public void deletePelicula(@PathVariable("idPelicula") Long idPelicula) {
-		peliculaService.deletePelicula(idPelicula);
+	@DeleteMapping(value = "title")
+	public void deletePeliculaByTitle(@RequestBody PeliculaDTO peliculaDTO) {
+		peliculaService.deletePeliculaByTitle(peliculaDTO);
 	}
 
-	@DeleteMapping(value = "title/{titltePelicula}")
-	public void deletePeliculaByTitle(@PathVariable("titltePelicula") String titltePelicula) {
-		peliculaService.deletePeliculaByTitle(titltePelicula);
-	}
-
-	
-	@PutMapping
-	public void updatePelicula(@RequestBody Pelicula pelicula ) {
-
-		peliculaService.updatePelicula(pelicula);
-
-	}
+//	
+//	@PutMapping
+//	public void updatePelicula(@RequestBody Pelicula pelicula ) {
+//
+//		peliculaService.updatePelicula(pelicula);
+//
+//	}
 	
 	
 	
