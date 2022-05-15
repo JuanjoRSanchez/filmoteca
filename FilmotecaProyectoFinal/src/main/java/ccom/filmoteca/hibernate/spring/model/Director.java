@@ -30,32 +30,22 @@ public class Director implements Serializable {
 	
 	@Column
 	private String name;
-	
-	@Column
-	private String lastname;
-	
-	@Column
-	private String anio;
-	
+
 	@OneToMany(mappedBy = "director", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
 	Set<Pelicula> peliculas = new HashSet<>();
 	
-
 	public Director() {
 		
 	}
 
-	public Director(Long id_director, String name, String lastname, String anio, Set<Pelicula> peliculas) {
+	public Director(Long id_director, String name,Set<Pelicula> peliculas) {
 		super();
 		this.id_director = id_director;
 		this.name = name;
-		this.lastname = lastname;
-		this.anio = anio;
 		this.peliculas = peliculas;
 	}
 
-	
 	public Long getId_director() {
 		return id_director;
 	}
@@ -72,22 +62,6 @@ public class Director implements Serializable {
 		this.name = name;
 	}
 
-	public String getLastname() {
-		return lastname;
-	}
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
-
-	public String getAnio() {
-		return anio;
-	}
-
-	public void setAnio(String anio) {
-		this.anio = anio;
-	}
-
 	public Set<Pelicula> getPeliculas() {
 		return peliculas;
 	}
@@ -98,29 +72,7 @@ public class Director implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Director [id_director=" + id_director + ", name=" + name + ", lastname=" + lastname + ", anio=" + anio
-				+ ", peliculas=" + peliculas + "]";
+		return "Director [id_director=" + id_director + ", name=" + name + ", peliculas=" + peliculas + "]";
 	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(anio, id_director, lastname, name, peliculas);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Director other = (Director) obj;
-		return Objects.equals(anio, other.anio) && Objects.equals(id_director, other.id_director)
-				&& Objects.equals(lastname, other.lastname) && Objects.equals(name, other.name)
-				&& Objects.equals(peliculas, other.peliculas);
-	}
-	
-	
 
 }

@@ -35,9 +35,13 @@ public class DirectorController {
         return directorService.getDirector();
     }
 
+//	@RequestMapping(value = "AJAX/{letterDirector}")
+//    public Director getDirectorAJAX(@PathVariable("letterDirector") String letterDirector) {	  	
+//		return directorService.getDirectorAJAX(letterDirector);
+//    }
+	
 	@RequestMapping(value = "AJAX/{letterDirector}")
-    public Director getDirectorAJAX(@PathVariable("letterDirector") String letterDirector) {
-		  	
+    public List<Director> getDirectorAJAX(@PathVariable("letterDirector") String letterDirector) {	  	
 		return directorService.getDirectorAJAX(letterDirector);
     }
 	
@@ -45,8 +49,6 @@ public class DirectorController {
     public Optional<Director> getDirectorById(@PathVariable("directorID") Long directorID) {
         return directorService.getDirectorById(directorID);
     }
-    
-   
 
     @PostMapping
     public void registerNewDirector(@RequestBody Director director) {

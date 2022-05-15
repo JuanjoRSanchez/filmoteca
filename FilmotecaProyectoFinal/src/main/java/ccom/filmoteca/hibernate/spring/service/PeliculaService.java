@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import ccom.filmoteca.hibernate.spring.dto.AddPeliculaDTO;
 import ccom.filmoteca.hibernate.spring.dto.AddPeliculaUsuarioDirector;
 import ccom.filmoteca.hibernate.spring.dto.PeliculaDTO;
+import ccom.filmoteca.hibernate.spring.dto.ResponsePeliculaDTO;
 import ccom.filmoteca.hibernate.spring.model.Director;
 import ccom.filmoteca.hibernate.spring.model.Pelicula;
 import ccom.filmoteca.hibernate.spring.model.Pelis_usus;
@@ -27,6 +28,9 @@ public class PeliculaService {
 
 	@Autowired
 	private DirectorRepository directorRepository;
+
+	@Autowired
+	private DirectorService directorService;
 
 	@Autowired
 	private PeliculasRepositories peliculasRepositories;
@@ -79,49 +83,104 @@ public class PeliculaService {
 	}
 
 	public String setPelicula(AddPeliculaDTO addpeliculadto) {
+		System.out.println(addpeliculadto);
 		String result = "ok";
 		Pelis_usus pelis_usus = new Pelis_usus();
-		
-		Usuario  usuario = usuarioService.getUsuarioByMail(addpeliculadto.getEmailusuario());
+
+		Usuario usuario = usuarioService.getUsuarioByMail(addpeliculadto.getEmailusuario());
 		pelis_usus.setUsuario(usuario);
-		
+
 		Pelicula pelicula = new Pelicula();
-		Optional<Pelicula>  peliculaOp = Optional.ofNullable(getPeliculaTitulo(addpeliculadto.getTitle()));
-		if(peliculaOp.isEmpty()) {
+
+		// Optional<Pelicula> peliculaOp =
+		// getPeliculaByTitle(addpeliculadto.getTitle());
+		Optional<Pelicula> peliculaOp = Optional
+				.ofNullable(peliculasRepositories.findByTitle(addpeliculadto.getTitle()));
+		if (peliculaOp.isEmpty()) {
 			pelicula.setTitle(addpeliculadto.getTitle());
 			pelicula.setAnio(addpeliculadto.getAnio());
-			
-			Optional <Director> directorOp = directorRepository.findDirectorByName(addpeliculadto.getNombreDirector());
-			if(directorOp.isEmpty()) {
-				result = "El director no existe";
-			}else {
+			Optional<Director> directorOp = directorRepository.findDirectorByName(addpeliculadto.getNombreDirector());
+			Director director1 = new Director();
+			if (directorOp.isEmpty()) {
+				result = "ok";
+				// System.out.println("El director no existe");
+				director1.setName(addpeliculadto.getNombreDirector());
+				directorRepository.save(director1);
+				pelicula.setDirector(director1);
+
+			} else {
 				Director director = directorOp.orElseThrow();
 				pelicula.setDirector(director);
 			}
-			peliculasRepositories.save(pelicula);
-		}else {
+			pelicula.setTitle(addpeliculadto.getTitle());
+			pelicula.setAnio(addpeliculadto.getAnio());
+
+		} else {
 			pelicula = peliculaOp.orElseThrow();
+
 		}
+		peliculasRepositories.save(pelicula);
 		pelis_usus.setComentario(addpeliculadto.getComentario());
 		pelis_usus.setNota(addpeliculadto.getNota());
 		pelis_usus.setUsuario(usuario);
 		pelis_usus.setPelicula(pelicula);
 		pelis_usus.setVista(addpeliculadto.getVista());
-		
+
 		pelis_ususRepositories.save(pelis_usus);
-		
+
 		return result;
 	}
 
-	public Pelicula getPeliculaByTitle(String title) {
+	public Optional<Pelicula> getPeliculaByTitle(String title) {
 
-		Pelicula pelicula = peliculasRepositories.findByTitle(title);
+		Optional<Pelicula> pelicula = Optional.of(peliculasRepositories.findByTitle(title));
 		if (pelicula != null) {
 
 			return pelicula;
 		}
 
 		return pelicula;
+	}
+
+	public AddPeliculaDTO getPeliculaUsusById(Long id) {
+
+		Pelis_usus pelis_usus = pelis_ususRepositories.findById(id).orElseThrow();
+		AddPeliculaDTO addPeliculaDTO = new AddPeliculaDTO();
+		if (pelis_usus != null) {
+			Director director = new Director();
+			director = directorRepository.findById(pelis_usus.getPelicula().getDirector().getId_director())
+					.orElseThrow();
+
+			addPeliculaDTO.setId(pelis_usus.getId());
+			addPeliculaDTO.setAnio(pelis_usus.getPelicula().getAnio());
+			addPeliculaDTO.setComentario(pelis_usus.getComentario());
+			addPeliculaDTO.setNombreDirector(director.getName());
+			addPeliculaDTO.setNota(pelis_usus.getNota());
+			addPeliculaDTO.setNombreDirector(pelis_usus.getPelicula().getDirector().getName());
+			addPeliculaDTO.setTitle(pelis_usus.getPelicula().getTitle());
+			addPeliculaDTO.setVista(pelis_usus.isVista());
+			return addPeliculaDTO;
+		}
+		return addPeliculaDTO;
+	}
+
+	public String deletePeliculaById(Long id) {
+		String result = "";
+		Pelicula pelicula = new Pelicula();
+		// pelicula = getPeliculaById(id);
+
+		Pelis_usus pelis_usus = new Pelis_usus();
+		pelis_usus = getPeliculaUsuById(id);
+
+		pelicula = peliculasRepositories.findById(pelis_usus.getPelicula().getId_pelicula()).orElseThrow();
+
+		if (pelis_usus != null) {
+
+			pelis_ususRepositories.deleteById(id);
+			result = "ok";
+		}
+
+		return result;
 	}
 
 	public boolean deletePeliculaByTitle(PeliculaDTO peliculaDTO) {
@@ -150,37 +209,72 @@ public class PeliculaService {
 		return pOptional;
 	}
 
-//	public Optional<Pelicula> getPeliculaByTitle(String title) {
-//		Optional<Pelicula> pelicula = peliculasRepositories.findPeliculaByTitle(title);
-//		return pelicula;
-//
-//	}
+	public List<AddPeliculaDTO> getPeliculasAddDTO(String emailUsuario) {
+		List<AddPeliculaDTO> listaDTO = new ArrayList<AddPeliculaDTO>();
 
+		Usuario usuario = new Usuario();
+		usuario = usuarioService.getUsuarioByMail(emailUsuario);
+		List<Pelis_usus> pOptional = pelis_ususRepositories.findByUsuario(usuario);
+		if (!pOptional.isEmpty()) {
+			for (Pelis_usus pelis_usus : pOptional) {
+				Director director = new Director();
+				director = directorService.getDirectorById(pelis_usus.getPelicula().getDirector().getId_director())
+						.orElseThrow();
+				AddPeliculaDTO addPeliculaDTO = new AddPeliculaDTO();
+				addPeliculaDTO.setId(pelis_usus.getId());
+				addPeliculaDTO.setAnio(pelis_usus.getPelicula().getAnio());
+				addPeliculaDTO.setComentario(pelis_usus.getComentario());
+				addPeliculaDTO.setNombreDirector(director.getName());
+				addPeliculaDTO.setNota(pelis_usus.getNota());
+				addPeliculaDTO.setNombreDirector(pelis_usus.getPelicula().getDirector().getName());
+				addPeliculaDTO.setTitle(pelis_usus.getPelicula().getTitle());
+				addPeliculaDTO.setVista(pelis_usus.isVista());
+				listaDTO.add(addPeliculaDTO);
+			}
+		}
+		return listaDTO;
+	}
 	public Pelis_usus getPeliculaUsuByTitle(Long y) {
-
 		Pelis_usus pelis_usus = pelis_ususRepositories.findById(y).orElseThrow();
-
 		return pelis_usus;
 	}
-	public Pelicula getPeliculaTitulo(String titulo) {
-
-		Pelicula pelicula = peliculasRepositories.findByTitle(titulo);
-
-		return pelicula;
+	public Pelis_usus getPeliculaUsuById(Long y) {
+		Pelis_usus pelis_usus = pelis_ususRepositories.findById(y).orElseThrow();
+		return pelis_usus;
 	}
-	 public Pelis_usus getPelicula_Usu(String emailUsuario, String titulo) {
-		 Pelis_usus peli_usu = new Pelis_usus();
-		 Usuario usuario = new Usuario();
-		 usuario = usuarioService.getUsuarioByMail(emailUsuario);
-		 
-		 Optional<Pelicula>  pelicula = Optional.ofNullable(new Pelicula());
-		 pelicula = Optional.ofNullable(getPeliculaByTitle(titulo));
-		 
-		 if (pelicula.isEmpty()) {
-			 
-		 }
-		 
-		 return peli_usu;
-	 }
+
+	public List<Pelicula> getPeliculaTitulo(String titulo) {
+		List<Pelicula> peliculas = peliculasRepositories.findByTitleStartingWith(titulo);
+		return peliculas;
+	}
+
+	public List<String> getPeliculaTituloAJAX(String tituloPelicula) {
+		List<String> resultList = new ArrayList<String>();
+		List<Pelicula> peliculas = new ArrayList<Pelicula>();
+		peliculas = (List<Pelicula>) peliculasRepositories.findByTitleStartingWith(tituloPelicula);
+		for (Pelicula peli : peliculas) {
+			resultList.add(peli.getTitle());
+		}
+		return resultList;
+	}
+
+	public String updatePeliculaUsu(AddPeliculaDTO addPeliculaDTO, Long id) {
+		String result = "ok";
+		Pelis_usus pelis_usus = pelis_ususRepositories.findById(id).orElseThrow();
+		pelis_usus.setComentario(addPeliculaDTO.getComentario());
+		pelis_usus.setNota(addPeliculaDTO.getNota());
+		pelis_usus.setVista(addPeliculaDTO.getVista());
+
+		Pelicula pelicula = peliculasRepositories.findByTitle(addPeliculaDTO.getTitle());
+
+		pelicula.setAnio(addPeliculaDTO.getAnio());
+		pelicula.setTitle(addPeliculaDTO.getTitle());
+		
+		peliculasRepositories.save(pelicula);
+		pelis_usus.setPelicula(pelicula);
+		pelis_ususRepositories.save(pelis_usus);
+
+		return result;
+	}
 
 }

@@ -1,5 +1,6 @@
 package ccom.filmoteca.hibernate.spring.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,9 +31,15 @@ public class DirectorService {
 
 		return director;
 	}
-
-	public Director getDirectorAJAX(String letraDirector) {
-		Director director = new Director();
+//
+//	public Director getDirectorAJAX(String letraDirector) {
+//		Director director = new Director();
+//		director = directorRepository.findByNameStartingWith(letraDirector);
+//
+//		return director;
+//	}
+	public List<Director> getDirectorAJAX(String letraDirector) {
+		List<Director> director =  new ArrayList<Director>();
 		director = directorRepository.findByNameStartingWith(letraDirector);
 
 		return director;
@@ -62,6 +69,7 @@ public class DirectorService {
 				&& !directorBd.getName().equals(director.getName())) {
 			directorBd.setName(director.getName());
 		}
+		/*
 		if (director.getLastname() != null && director.getLastname().length() > 0
 				&& !directorBd.getLastname().equals(director.getLastname())) {
 			directorBd.setLastname(director.getLastname());
@@ -70,7 +78,7 @@ public class DirectorService {
 				&& !directorBd.getAnio().equals(director.getAnio())) {
 			directorBd.setAnio(director.getAnio());
 		}
-
+*/
 		return directorRepository.save(director);
 
 	}

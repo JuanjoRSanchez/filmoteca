@@ -3,6 +3,7 @@ package ccom.filmoteca.hibernate.spring.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,13 +28,11 @@ public class Pelis_usus implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name =  "usuarioId", referencedColumnName =  "id_usuario", updatable = false)
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@JsonIgnore
 	private Usuario usuario;
-	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name =  "pelicualId", referencedColumnName =   "id_pelicula", updatable = false)
@@ -105,38 +104,6 @@ public class Pelis_usus implements Serializable{
 
 	public void setVista(boolean vista) {
 		this.vista = vista;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(comentario, id, nota, pelicula, usuario, vista);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Pelis_usus other = (Pelis_usus) obj;
-		return Objects.equals(comentario, other.comentario) && Objects.equals(id, other.id)
-				&& Objects.equals(nota, other.nota) && Objects.equals(pelicula, other.pelicula)
-				&& Objects.equals(usuario, other.usuario) && vista == other.vista;
-	}
-
-	@Override
-	public String toString() {
-		return "Pelis_usus [id=" + id + ", usuario=" + usuario + ", pelicula=" + pelicula + ", nota=" + nota
-				+ ", comentario=" + comentario + ", vista=" + vista + "]";
-	}
-
-
-
-
-
-	
-	
+	}	
 	
 }

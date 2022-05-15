@@ -35,11 +35,10 @@ public class Pelicula implements Serializable{
     private String anio;
     
     @JsonIgnore
-    @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pelicula", orphanRemoval = true)
     private List<Pelis_usus> pelis_usus = new ArrayList<Pelis_usus>();
     
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "id_director")
     private Director director;
     
@@ -95,29 +94,6 @@ public class Pelicula implements Serializable{
 
 	public void setPelis_usus(List<Pelis_usus> pelis_usus) {
 		this.pelis_usus = pelis_usus;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(anio, director, id_pelicula, pelis_usus, title);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Pelicula other = (Pelicula) obj;
-		return Objects.equals(anio, other.anio) && Objects.equals(director, other.director)
-				&& Objects.equals(id_pelicula, other.id_pelicula) && Objects.equals(pelis_usus, other.pelis_usus)
-				&& Objects.equals(title, other.title);
-	}
-
-
-	
-	
+	}	
    
 }

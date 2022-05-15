@@ -1,10 +1,8 @@
 package ccom.filmoteca.hibernate.spring.dto;
 
-import java.util.Objects;
-
 public class AddPeliculaDTO {
-
 	
+	private Long id;
 	
 	private String emailusuario;
 	
@@ -24,9 +22,10 @@ public class AddPeliculaDTO {
 		
 	}
 	
-	public AddPeliculaDTO(String emailusuario, String nombreDirector, String title, String anio, String comentario,
-			String nota, Boolean vista) {
+	public AddPeliculaDTO(Long id, String emailusuario, String nombreDirector, String title, String anio,
+			String comentario, String nota, Boolean vista) {
 		super();
+		this.id = id;
 		this.emailusuario = emailusuario;
 		this.nombreDirector = nombreDirector;
 		this.title = title;
@@ -34,6 +33,14 @@ public class AddPeliculaDTO {
 		this.comentario = comentario;
 		this.nota = nota;
 		this.vista = vista;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Boolean getVista() {
@@ -93,29 +100,12 @@ public class AddPeliculaDTO {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(anio, comentario, emailusuario, nombreDirector, nota, title, vista);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AddPeliculaDTO other = (AddPeliculaDTO) obj;
-		return Objects.equals(anio, other.anio) && Objects.equals(comentario, other.comentario)
-				&& Objects.equals(emailusuario, other.emailusuario)
-				&& Objects.equals(nombreDirector, other.nombreDirector) && Objects.equals(nota, other.nota)
-				&& Objects.equals(title, other.title) && Objects.equals(vista, other.vista);
-	}
-
-	@Override
 	public String toString() {
-		return "AddPeliculaDTO [emailusuario=" + emailusuario + ", nombreDirector=" + nombreDirector + ", title="
-				+ title + ", anio=" + anio + ", comentario=" + comentario + ", nota=" + nota + ", vista=" + vista + "]";
+		return "AddPeliculaDTO [id=" + id + ", emailusuario=" + emailusuario + ", nombreDirector=" + nombreDirector
+				+ ", title=" + title + ", anio=" + anio + ", comentario=" + comentario + ", nota=" + nota + ", vista="
+				+ vista + "]";
 	}
+
+
 
 }

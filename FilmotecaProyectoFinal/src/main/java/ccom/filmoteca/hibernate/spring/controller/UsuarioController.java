@@ -39,15 +39,15 @@ public class UsuarioController {
     public Optional<Usuario> getUsusarioById(@PathVariable("usuarioId") Long usuarioId) {
         return usuarioService.getUsuarioById(usuarioId);
     }
-
-//    @RequestMapping(value ="/log" , params={"email","password"} )
-//    public Boolean getUsusarioLog(@RequestParam String email, String password) {
-//        return usuarioService.getUsuarioLog(email, password);
+    
+//    @RequestMapping(value ="/login" , params={"email","password"} )
+//    public Usuario getUsusarioLogin(@RequestParam String email, String password) {
+//        return usuarioService.getUsuarioLogin(email, password).orElseThrow();
 //    }
     
     @RequestMapping(value ="/login" , params={"email","password"} )
-    public Usuario getUsusarioLogin(@RequestParam String email, String password) {
-        return usuarioService.getUsuarioLogin(email, password).orElseThrow();
+    public int getUsusarioLogin(@RequestParam String email, String password) {
+        return usuarioService.getUsuarioLog(email, password);
     }
     
     @PostMapping

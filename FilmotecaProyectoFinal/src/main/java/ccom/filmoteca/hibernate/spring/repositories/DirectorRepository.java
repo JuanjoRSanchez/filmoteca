@@ -1,5 +1,6 @@
 package ccom.filmoteca.hibernate.spring.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,6 +23,6 @@ public interface DirectorRepository extends JpaRepository<Director, Long> {
 //	Director findDirectorByLetter(@Param("director") String director);
 	
 	
-	Director  findByNameStartingWith(String name);
+	List<Director>  findByNameStartingWith(String name);
 	
 }

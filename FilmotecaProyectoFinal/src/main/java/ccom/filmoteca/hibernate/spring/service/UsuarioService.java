@@ -47,37 +47,27 @@ public class UsuarioService {
         return usuario;
 
     }
-//    public Boolean getUsuarioLog(Usuario usuario) {
-//
-//    	Optional<Usuario> usuarioOp = usuarioRepositories.findUsuarioByEmail( usuario.getEmail()) ;
-//    	
-//    	Optional<Usuario> usuarioOp1 = usuarioRepositories.findByPassword( usuario.getPassword()) ;
-//    	    	 	
-//    	if(!usuarioOp.isEmpty() && !usuarioOp1.isEmpty()) {
-//    		if(usuarioOp.equals(usuarioOp1)) 
-//        	{
-//    			return true;
-//    		
-//        	}	
-//    	}
-//        return false;
-//
-//    }
     
-    public Boolean getUsuarioLog(String email, String password) {
+    public int getUsuarioLog(String email, String password) {
+    	int result = 0;
 
+    	// 0 = usuario no correcto
+    	// 1 = usuario correcto
+    	// 
     	Optional<Usuario> usuarioOp = usuarioRepositories.findUsuarioByEmail( email) ;
     	
     	Optional<Usuario> usuarioOp1 = usuarioRepositories.findByPassword( password) ;
     	    	 	
     	if(!usuarioOp.isEmpty() && !usuarioOp1.isEmpty()) {
+    		
     		if(usuarioOp.equals(usuarioOp1)) 
         	{
-    			return true;
+    			result = 1;
+    			return result;
     		
         	}	
     	}
-        return false;
+        return result;
 
     }
     public Optional<Usuario> getUsuarioLogin(String email, String password) {
