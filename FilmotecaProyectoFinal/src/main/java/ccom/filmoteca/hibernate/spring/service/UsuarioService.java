@@ -14,135 +14,173 @@ import ccom.filmoteca.hibernate.spring.repositories.UsuarioRepositories;
 @Service
 public class UsuarioService {
 
-    @Autowired
-    private final UsuarioRepositories usuarioRepositories;
-    
-    @Autowired
-    private final RolRepositories rolRepositories;
-    
+	@Autowired
+	private final UsuarioRepositories usuarioRepositories;
 
-    @Autowired
-    public UsuarioService(UsuarioRepositories usuarioRepositories, RolRepositories rolRepositories) {
-        this.usuarioRepositories = usuarioRepositories;
-		this.rolRepositories = rolRepositories;	
-    }
+	@Autowired
+	private final RolRepositories rolRepositories;
 
-   
-    public Usuario getUsuarioByMail(String mail) {
-    	Usuario usuario = new Usuario();
-    	usuario = usuarioRepositories.findUsuarioByEmail(mail).orElseThrow();
-    	
+	@Autowired
+	public UsuarioService(UsuarioRepositories usuarioRepositories, RolRepositories rolRepositories) {
+		this.usuarioRepositories = usuarioRepositories;
+		this.rolRepositories = rolRepositories;
+	}
+
+	public Usuario getUsuarioByMail(String mail) {
+		Usuario usuario = new Usuario();
+		usuario = usuarioRepositories.findUsuarioByEmail(mail).orElseThrow();
+
 		return usuario;
-    	
-    }
-    
-    public List<Usuario> getUsuario() {
-        return usuarioRepositories.findAll();
-    }
 
-    public Optional<Usuario> getUsuarioById(Long usuarioId) {
+	}
 
-        Optional<Usuario> usuario = usuarioRepositories.findById(usuarioId);
+	public List<Usuario> getUsuario() {
+		return usuarioRepositories.findAll();
+	}
 
-        return usuario;
+	public Optional<Usuario> getUsuarioById(Long usuarioId) {
 
-    }
-    
-    public int getUsuarioLog(String email, String password) {
-    	int result = 0;
+		Optional<Usuario> usuario = usuarioRepositories.findById(usuarioId);
 
-    	// 0 = usuario no correcto
-    	// 1 = usuario correcto
-    	// 
-    	Optional<Usuario> usuarioOp = usuarioRepositories.findUsuarioByEmail( email) ;
-    	
-    	Optional<Usuario> usuarioOp1 = usuarioRepositories.findByPassword( password) ;
-    	    	 	
-    	if(!usuarioOp.isEmpty() && !usuarioOp1.isEmpty()) {
-    		
-    		if(usuarioOp.equals(usuarioOp1)) 
-        	{
-    			result = 1;
-    			return result;
-    		
-        	}	
-    	}
-        return result;
+		return usuario;
 
-    }
-    public Optional<Usuario> getUsuarioLogin(String email, String password) {
+	}
 
-    	Optional<Usuario> usuarioOp = usuarioRepositories.findUsuarioByEmail( email) ;
-    	
-    	Optional<Usuario> usuarioOp1 = usuarioRepositories.findByPassword( password) ;
-    	    	 	
-    	if(!usuarioOp.isEmpty() && !usuarioOp1.isEmpty()) {
-    		if(usuarioOp.equals(usuarioOp1)) 
-        	{
-    			return usuarioOp;
-    		
-        	}	
-    	}
-    	usuarioOp = null;
-        return usuarioOp;
+	public int getUsuarioLog(String email, String password) {
+		int result = 0;
+		Optional<Usuario> usuarioOp = usuarioRepositories.findUsuarioByEmail(email);
 
-    }
-    
-    public Optional<Usuario> getUsuarioByIdSeguro(Long usuarioId) {
+		Optional<Usuario> usuarioOp1 = usuarioRepositories.findByPassword(password);
 
-        Optional<Usuario> usuario = usuarioRepositories.findById(usuarioId);
+		if (!usuarioOp.isEmpty() && !usuarioOp1.isEmpty()) {
 
-        return usuario;
+			if (usuarioOp.equals(usuarioOp1)) {
+				result = 1;
+				return result;
 
-    }
+			}
+		}
+		return result;
 
-    public void addNewUsuario(Usuario usuario) {
-        Optional<Usuario> usuarioOptional = usuarioRepositories.findUsuarioByEmail(usuario.getEmail());
-        if (usuarioOptional.isPresent()) {
-            throw new IllegalStateException("El Eamil ya existe en la base de datos");
-        }
-        if(usuario.getRoles().isEmpty()) {
-        	Rol rol = new Rol();
-            rol.setId(1L);
-            rol.setNombre("usuario");
-            usuario.getRoles().add(rol);
-        }
-        
-        usuarioRepositories.save(usuario);
-    }
+	}
 
-    public void deleteUsuario(Long usuarioId) {
+	public Usuario getUsuarioLoginJWT(String email, String password) {
+		Usuario usuario = new Usuario();
+		Optional<Usuario> usuarioOp = usuarioRepositories.findUsuarioByEmail(email);
+		Optional<Usuario> usuarioOp1 = usuarioRepositories.findByPassword(password);
+		if (!usuarioOp.isEmpty() && !usuarioOp1.isEmpty()) {
+			if (usuarioOp.equals(usuarioOp1)) {
+				usuario = usuarioOp.orElseThrow();
+				return usuario;
+			}
+		}
+		return usuario;
+	}
 
-        boolean exists = usuarioRepositories.existsById(usuarioId);
-        if (!exists) {
-            throw new IllegalStateException("El usuario con Id " + usuarioId + " no existe.");
-        }
+	public boolean getUsuarioLogJWT(String email, String password) {
+		boolean result = false;
 
-        usuarioRepositories.deleteById(usuarioId);
-    }
+		// 0 = usuario no correcto
+		// 1 = usuario correcto
+		//
+		Optional<Usuario> usuarioOp = usuarioRepositories.findUsuarioByEmail(email);
 
-    public Usuario updateUsuario(Usuario usuario) {
+		Optional<Usuario> usuarioOp1 = usuarioRepositories.findByPassword(password);
 
-        Usuario usuarioBd = usuarioRepositories.findById(usuario.getId_usuario()).orElseThrow(() -> new IllegalStateException(
-                "Usuario con id " + usuario.getId_usuario() + " no existe en la base de datos"));
-        if (usuario.getName() != null && usuario.getName().length() > 0 && !usuarioBd.getName().equals(usuario.getName())) {
-        	usuarioBd.setName(usuario.getName());
-        }
-        if (usuario.getPassword() != null && usuario.getPassword().length() > 0 && !usuarioBd.getPassword().equals(usuario.getPassword())) {
-        	usuarioBd.setPassword(usuario.getPassword());
-        }
-        if (usuario.getEmail() != null && usuario.getEmail().length() > 0 && !usuarioBd.getEmail().equals(usuario.getEmail())) {
-        	usuarioBd.setEmail(usuario.getEmail());
-        }
+		if (!usuarioOp.isEmpty() && !usuarioOp1.isEmpty()) {
 
-        return usuarioRepositories.save(usuarioBd);
-        
-    }
-    
-    public void addRoleToUser(String usuarioMail, Long rolId) {
-    	Usuario usuario = usuarioRepositories.findUsuarioByEmail(usuarioMail).orElseThrow();
-    	Rol rol = rolRepositories.findById(rolId).orElseThrow();
-    	usuario.getRoles().add(rol);
-    }
-    
+			if (usuarioOp.equals(usuarioOp1)) {
+				result = true;
+				return result;
+
+			}
+		}
+		return result;
+
+	}
+
+	public Optional<Usuario> getUsuarioLogin(String email, String password) {
+
+		Optional<Usuario> usuarioOp = usuarioRepositories.findUsuarioByEmail(email);
+
+		Optional<Usuario> usuarioOp1 = usuarioRepositories.findByPassword(password);
+
+		if (!usuarioOp.isEmpty() && !usuarioOp1.isEmpty()) {
+			if (usuarioOp.equals(usuarioOp1)) {
+				return usuarioOp;
+
+			}
+		}
+		usuarioOp = null;
+		return usuarioOp;
+
+	}
+
+	public Optional<Usuario> getUsuarioByIdSeguro(Long usuarioId) {
+
+		Optional<Usuario> usuario = usuarioRepositories.findById(usuarioId);
+
+		return usuario;
+
+	}
+
+	public int addNewUsuario(Usuario usuario) {
+		int salida = 1;
+		Optional <Usuario> usuarioOptional = usuarioRepositories.findUsuarioByEmail(usuario.getEmail());
+		if (usuarioOptional.isPresent()) {
+			//throw new IllegalStateException("El Eamil ya existe en la base de datos");
+			salida = 0;
+		}
+		else  {
+			if(usuario.getRoles().isEmpty()) {
+			Rol rol = new Rol();
+			rol.setId(1L);
+			rol.setNombre("usuario");
+			usuario.getRoles().add(rol);
+			}
+			usuarioRepositories.save(usuario);
+		}
+
+		
+		return salida;
+	}
+
+	public void deleteUsuario(Long usuarioId) {
+		// Optional<Usuario> usuario =  usuarioRepositories.findById(usuarioId);
+		boolean exists = usuarioRepositories.existsById(usuarioId);
+		if (!exists) {
+			throw new IllegalStateException("El usuario con Id " + usuarioId + " no existe.");
+		}
+		
+		usuarioRepositories.deleteById(usuarioId);
+	}
+
+	public Usuario updateUsuario(Usuario usuario) {
+
+		Usuario usuarioBd = usuarioRepositories.findById(usuario.getId_usuario())
+				.orElseThrow(() -> new IllegalStateException(
+						"Usuario con id " + usuario.getId_usuario() + " no existe en la base de datos"));
+		if (usuario.getName() != null && usuario.getName().length() > 0
+				&& !usuarioBd.getName().equals(usuario.getName())) {
+			usuarioBd.setName(usuario.getName());
+		}
+		if (usuario.getPassword() != null && usuario.getPassword().length() > 0
+				&& !usuarioBd.getPassword().equals(usuario.getPassword())) {
+			usuarioBd.setPassword(usuario.getPassword());
+		}
+		if (usuario.getEmail() != null && usuario.getEmail().length() > 0
+				&& !usuarioBd.getEmail().equals(usuario.getEmail())) {
+			usuarioBd.setEmail(usuario.getEmail());
+		}
+
+		return usuarioRepositories.save(usuarioBd);
+
+	}
+
+	public void addRoleToUser(String usuarioMail, Long rolId) {
+		Usuario usuario = usuarioRepositories.findUsuarioByEmail(usuarioMail).orElseThrow();
+		Rol rol = rolRepositories.findById(rolId).orElseThrow();
+		usuario.getRoles().add(rol);
+	}
+
 }

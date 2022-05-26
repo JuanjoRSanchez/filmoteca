@@ -12,7 +12,10 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -50,7 +53,7 @@ public class Usuario implements Serializable{
 	@Column(name = "password")
 	private String password;
 
-	@Column(name = "email")
+	@Column(name = "email", unique = true)
 	private String email;
 	
 	@Temporal(TemporalType.TIMESTAMP)

@@ -20,6 +20,8 @@ public class Rol {
 	private Long id;
 
 	private String nombre;
+	
+	
 
 	public Long getId() {
 		return id;
@@ -36,5 +38,12 @@ public class Rol {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+
+	@Override
+	public String toString() {
+		return "Rol [id=" + id + ", nombre=" + nombre + "]";
+	}
+	
+	
 
 }
